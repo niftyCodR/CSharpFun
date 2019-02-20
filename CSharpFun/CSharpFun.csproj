@@ -34,6 +34,27 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Option.Combine.tt</DependentUpon>
     </Compile>
+    <Compile Update="Result.Bind.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Result.Bind.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Result.Map.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Result.Map.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Result.Match.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Result.Match.tt</DependentUpon>
+    </Compile>
+    <Compile Update="SuccessResult.cs">
+      <DependentUpon>Result.cs</DependentUpon>
+    </Compile>
+    <Compile Update="ErrorResult.cs">
+      <DependentUpon>Result.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -60,6 +81,21 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Option.Match.cs</LastGenOutput>
       <DependentUpon>Option.cs</DependentUpon>
+    </None>
+    <None Update="Result.Map.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Result.Map.cs</LastGenOutput>
+      <DependentUpon>Result.cs</DependentUpon>
+    </None>
+    <None Update="Result.Bind.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Result.Bind.cs</LastGenOutput>
+      <DependentUpon>Result.cs</DependentUpon>
+    </None>
+    <None Update="Result.Match.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Result.Match.cs</LastGenOutput>
+      <DependentUpon>Result.cs</DependentUpon>
     </None>
   </ItemGroup>
 

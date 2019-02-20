@@ -1,0 +1,61 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+namespace CSharpFun
+{
+    public static partial class Result
+    {
+		public static Result<T, TError> OnSuccess<T, TError>(this Result<T, TError> result, Action<T> onSuccess)
+		{
+			return result.Match(value =>
+		    {
+		        onSuccess(value);
+		        return result;
+		    }, _ => result);
+		}
+
+		public static Result<T, TError> OnError<T, TError>(this Result<T, TError> result, Action<TError> onError)
+		{
+			return result.Match(_ => result, error =>
+		    {
+		        onError(error);
+		        return result;
+		    });
+		}
+<#	for(var typeParamCount=2;typeParamCount<=16;typeParamCount++)
+{
+	var range = Enumerable.Range(1, typeParamCount);
+	var typeParams = string.Join(", ", range.Select(i => $"T{i}"));
+	var bindParams = string.Join(", ", range.Select(i => $"tuple.Item{i}"));
+#>
+
+		public static TResult Match<<#=typeParams #>, TError, TResult>(this Result<(<#=typeParams #>), TError> result, Func<<#=typeParams #>, TResult> onSuccess, Func<TError, TResult> onError)
+		{
+			return result.Match(tuple => onSuccess(<#=bindParams #>), onError);
+		}
+
+		public static Result<(<#=typeParams #>), TError> OnSuccess<<#=typeParams #>, TError>(this Result<(<#=typeParams #>), TError> result, Action<<#=typeParams #>> onSuccess)
+		{
+			return result.Match(tuple =>
+		    {
+		        onSuccess(<#=bindParams #>);
+		        return result;
+		    }, _ => result);
+		}
+
+		public static Result<(<#=typeParams #>), TError> OnError<<#=typeParams #>, TError>(this Result<(<#=typeParams #>), TError> result, Action<TError> onError)
+		{
+			return result.Match(_ => result, error =>
+		    {
+		        onError(error);
+		        return result;
+		    });
+		}
+<#} #>
+    }
+}

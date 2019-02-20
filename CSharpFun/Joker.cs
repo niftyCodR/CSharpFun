@@ -29,5 +29,9 @@
         public static Option<T> Some<T>(T value) => Option.Some(value);
 
         public static NoneOption None => Option.None;
+
+        public static SuccessResult<T> Success<T>(T value) => new SuccessResult<T>(value);
+
+        public static ErrorResult<TError> Error<TError>(TError error) => new ErrorResult<TError>(error);
     }
 }
