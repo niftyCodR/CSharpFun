@@ -60,12 +60,92 @@
     <Compile Update="ErrorResult.cs">
       <DependentUpon>Result.cs</DependentUpon>
     </Compile>
+    <Compile Update="Fn.Def.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Fn.Def.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Fn.From.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Fn.From.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Ext/FnExtensions.Apply.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FnExtensions.Apply.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Ext/FnExtensions.Curry.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FnExtensions.Curry.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Ext/FnExtensions.Uncurry.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FnExtensions.Uncurry.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Ext/FnExtensions.Ignore.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FnExtensions.Ignore.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Ext/FnExtensions.Deconstruct.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FnExtensions.Deconstruct.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Ext/FnExtensions.Tup.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FnExtensions.Tup.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
     <None Update="Choice.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Choice.cs</LastGenOutput>
+    </None>
+    <None Update="Ext/FnExtensions.Apply.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FnExtensions.Apply.cs</LastGenOutput>
+      <DependentUpon>FnExtensions.cs</DependentUpon>
+    </None>
+    <None Update="Ext/FnExtensions.Curry.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FnExtensions.Curry.cs</LastGenOutput>
+      <DependentUpon>FnExtensions.cs</DependentUpon>
+    </None>
+    <None Update="Ext/FnExtensions.Deconstruct.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FnExtensions.Deconstruct.cs</LastGenOutput>
+      <DependentUpon>FnExtensions.cs</DependentUpon>
+    </None>
+    <None Update="Fn.Def.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Fn.Def.cs</LastGenOutput>
+      <DependentUpon>Fn.cs</DependentUpon>
+    </None>
+    <None Update="Fn.From.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Fn.From.cs</LastGenOutput>
+      <DependentUpon>Fn.cs</DependentUpon>
+    </None>
+    <None Update="Ext/FnExtensions.Ignore.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FnExtensions.Ignore.cs</LastGenOutput>
+      <DependentUpon>FnExtensions.cs</DependentUpon>
+    </None>
+    <None Update="Ext/FnExtensions.Tup.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FnExtensions.Tup.cs</LastGenOutput>
+      <DependentUpon>FnExtensions.cs</DependentUpon>
+    </None>
+    <None Update="Ext/FnExtensions.Uncurry.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FnExtensions.Uncurry.cs</LastGenOutput>
+      <DependentUpon>FnExtensions.cs</DependentUpon>
     </None>
     <None Update="Option.Bind.tt">
       <Generator>TextTemplatingFileGenerator</Generator>

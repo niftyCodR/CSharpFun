@@ -1,0 +1,27 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+namespace CSharpFun.Ext
+{
+    public static partial class FnExtensions
+    {<# for(var typeParamCount=2;typeParamCount<=16;typeParamCount++)
+{
+	var range = Enumerable.Range(1, typeParamCount);
+	var typeParams = string.Join(", ", range.Select(i => $"T{i}"));
+	var funcSignature = Enumerable.Range(1, typeParamCount-1).Select(i => typeParamCount - i).Select(i => $"T{i}").Aggregate($"Func<T{typeParamCount}, TResult>", (acc, t) => $"Func<{t}, {acc}>");
+	var valueParams = string.Join("", range.Select(i => $"(t{i})"));
+	var values = string.Join(", ", range.Select(i => $"t{i}"));
+#>
+
+		public static Func<<#=typeParams #>, TResult> Uncurry<<#=typeParams #>, TResult>(this <#=funcSignature #> fn)
+		{
+			return (<#=values #>) => fn<#=valueParams #>;
+		}
+<#} #>
+    }
+}

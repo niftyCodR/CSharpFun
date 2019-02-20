@@ -1,0 +1,38 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+namespace CSharpFun
+{
+    public static partial class Fn
+    {
+		public static Func<Unit> From(Action action)
+        {
+            return () =>
+            {
+                action();
+                return Unit.Value;
+            };
+        }
+<# for(var typeParamCount=1;typeParamCount<=16;typeParamCount++)
+{
+	var range = Enumerable.Range(1, typeParamCount);
+	var typeParams = string.Join(", ", range.Select(i => $"T{i}"));
+	var paramNames = string.Join(", ", range.Select(i => $"t{i}"));
+#>
+
+        public static Func<<#=typeParams #>, Unit> From<<#=typeParams #>>(Action<<#=typeParams #>> action)
+        {
+            return action == null ? null : new Func<<#=typeParams #>, Unit>((<#=paramNames #>) =>
+            {
+                action(<#=paramNames #>);
+                return Unit.Value;
+            });
+        }
+<#} #>
+    }
+}
