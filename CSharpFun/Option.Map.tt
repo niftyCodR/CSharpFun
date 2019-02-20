@@ -1,0 +1,34 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+namespace CSharpFun
+{
+	public static partial class Option
+    {
+		public static Option<TResult> Map<T, TResult>(this Option<T> option, Func<T, TResult> selector)
+        {
+            if (selector == null) throw new ArgumentNullException(nameof(selector));
+
+            return option.Match(value => Some(selector(value)), () => None);
+        }
+<# for(var typeParamCount=2;typeParamCount<=16;typeParamCount++)
+{
+	var range = Enumerable.Range(1, typeParamCount);
+	var typeParams = string.Join(", ", range.Select(i => $"T{i}"));
+	var bindParams = string.Join(", ", range.Select(i => $"tuple.Item{i}"));
+#>
+
+		public static Option<TResult> Map<<#=typeParams #>, TResult>(this Option<(<#=typeParams #>)> option, Func<<#=typeParams #>, TResult> selector)
+		{
+			if (selector == null) throw new ArgumentNullException(nameof(selector));
+
+			return option.Match(tuple => Option<TResult>.Some(selector(<#=bindParams #>)), () => Option<TResult>.None);
+		}
+<#} #>
+	}
+}

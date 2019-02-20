@@ -5,4 +5,57 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Update="NoneOption.cs">
+      <DependentUpon>Option.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Option.Map.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Option.Map.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Option.Bind.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Option.Bind.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Option.Match.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Option.Match.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Option.Combine.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Option.Combine.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Option.Bind.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Option.Bind.cs</LastGenOutput>
+      <DependentUpon>Option.cs</DependentUpon>
+    </None>
+    <None Update="Option.Combine.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Option.Combine.cs</LastGenOutput>
+      <DependentUpon>Option.cs</DependentUpon>
+    </None>
+    <None Update="Option.Map.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Option.Map.cs</LastGenOutput>
+      <DependentUpon>Option.cs</DependentUpon>
+    </None>
+    <None Update="Option.Match.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Option.Match.cs</LastGenOutput>
+      <DependentUpon>Option.cs</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
 </Project>

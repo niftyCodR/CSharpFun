@@ -1,0 +1,32 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+namespace CSharpFun
+{
+	public static partial class Option
+    {
+		public static Option<TResult> Bind<T, TResult>(this Option<T> option, Func<T, Option<TResult>> bind)
+        {
+            if (bind == null) throw new ArgumentNullException(nameof(bind));
+
+            return option.Match(bind, () => None);
+        }
+<# for(var typeParamCount=2;typeParamCount<=16;typeParamCount++)
+{
+	var range = Enumerable.Range(1, typeParamCount);
+	var typeParams = string.Join(", ", range.Select(i => $"T{i}"));
+	var bindParams = string.Join(", ", range.Select(i => $"tuple.Item{i}"));
+#>
+
+		public static Option<TResult> Bind<<#=typeParams #>, TResult>(this Option<(<#=typeParams #>)> option, Func<<#=typeParams #>, Option<TResult>> bind)
+		{
+			return option.Match(tuple => bind(<#=bindParams #>), () => Option<TResult>.None);
+		}
+<#} #>
+	}
+}
