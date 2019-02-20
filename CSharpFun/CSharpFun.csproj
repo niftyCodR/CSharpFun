@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Choice.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Choice.tt</DependentUpon>
+    </Compile>
     <Compile Update="NoneOption.cs">
       <DependentUpon>Option.cs</DependentUpon>
     </Compile>
@@ -32,6 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Choice.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Choice.cs</LastGenOutput>
+    </None>
     <None Update="Option.Bind.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Option.Bind.cs</LastGenOutput>

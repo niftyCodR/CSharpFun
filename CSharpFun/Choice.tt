@@ -1,0 +1,147 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<# 
+	var caseNumbers = Enumerable.Range(1, 5);
+#>
+using System;
+using System.Collections.Generic;
+
+namespace CSharpFun
+{<# 
+	foreach(var caseNo in caseNumbers)
+	{ #>
+
+	public struct ChoiceCase<#=caseNo #><T>
+    {
+        public T Value { get; }
+
+        public ChoiceCase<#=caseNo #>(T value)
+        {
+            Value = value;
+        }
+    }
+<#	} #>
+
+    public static class Choice
+    {<# 
+	foreach(var caseNo in caseNumbers)
+	{ #>
+
+		public static ChoiceCase<#=caseNo #><T> Case<#=caseNo #><T>(T value) => new ChoiceCase<#=caseNo #><T>(value);
+<#	} #>
+    }
+
+    public enum ChoiceCase
+    {
+		Undefined,
+<#	foreach(var caseNo in caseNumbers)
+	{ #>
+		Case<#=caseNo #>,
+<#	} #>
+    }
+<#	foreach(var caseNo in caseNumbers.Skip(1))
+	{
+		var caseFieldNumbers = Enumerable.Range(1, caseNo);
+		var typeParams = string.Join(", ", caseFieldNumbers.Select(i => $"TCase{i}"));
+#>
+
+	public struct Choice<<#=typeParams #>> : IEquatable<Choice<<#=typeParams #>>>
+	{
+		private static readonly IEqualityComparer<Choice<<#=typeParams #>>> EqualityComparer = new MemberEqualityComparer<Choice<<#=typeParams #>>>(GetEqualityMembers);
+
+<#		foreach(var caseFieldNo in caseFieldNumbers)
+		{ #>
+		private readonly TCase<#=caseFieldNo #> _case<#=caseFieldNo #>;
+<#		}
+
+		var ctorParams = string.Join(", ", caseFieldNumbers.Select(i => $"TCase{i} case{i}"));
+#>
+
+		private Choice(ChoiceCase @case, <#=ctorParams #>)
+        {
+            Case = @case;
+<#		foreach(var caseFieldNo in caseFieldNumbers)
+		{ #>
+			_case<#=caseFieldNo #> = case<#=caseFieldNo #>;
+<#		} #>
+        }
+<#		foreach(var caseFieldNo in caseFieldNumbers)
+		{ 
+			var ctorParamValues = caseFieldNumbers.Select(_ => "default").ToList();
+			ctorParamValues[caseFieldNo-1] = "value";
+#>
+
+		public static Choice<<#=typeParams #>> Case<#=caseFieldNo #>(TCase<#=caseFieldNo #> value) => new Choice<<#=typeParams #>>(ChoiceCase.Case<#=caseFieldNo #>, <#=string.Join(", ", ctorParamValues) #>);
+<#		} #>
+
+		public ChoiceCase Case { get; }
+
+<#		foreach(var caseFieldNo in caseFieldNumbers)
+		{ #>
+		public bool IsCase<#=caseFieldNo #> => Case == ChoiceCase.Case<#=caseFieldNo #>;
+<#		}
+
+		var matchParams = string.Join(", ", caseFieldNumbers.Select(i => $"Func<TCase{i}, TResult> case{i}"));
+#>
+		
+        public TResult Match<TResult>(<#=matchParams #>)
+        {
+            switch (Case)
+            {
+                case ChoiceCase.Undefined:
+<#		foreach(var caseFieldNo in caseFieldNumbers)
+		{ #>
+				case ChoiceCase.Case<#=caseFieldNo #>:
+                    return case<#=caseFieldNo #>(_case<#=caseFieldNo #>);
+<#		} #>
+                default:
+                    throw new InvalidOperationException("Bug: Undefined choice case.");
+
+            }
+        }
+
+		private static IEnumerable<object> GetEqualityMembers(Choice<<#=typeParams #>> x)
+        {
+            yield return x.Case;
+            yield return x.Match<object>(<#=string.Join(", ", caseFieldNumbers.Select(i => "value => value")) #>);
+        }
+
+		public bool Equals(Choice<<#=typeParams #>> other) => EqualityComparer.Equals(this, other);
+
+        public override bool Equals(object obj) => obj is Choice<<#=typeParams #>> other && Equals(other);
+
+        public override int GetHashCode() => EqualityComparer.GetHashCode(this);
+
+        public static bool operator ==(Choice<<#=typeParams #>> a, Choice<<#=typeParams #>> b) => a.Equals(b);
+
+        public static bool operator !=(Choice<<#=typeParams #>> a, Choice<<#=typeParams #>> b) => !(a == b);
+<#		foreach(var caseFieldNo in caseFieldNumbers)
+		{ #>
+
+		public static bool operator ==(Choice<<#=typeParams #>> a, ChoiceCase<#=caseFieldNo #><TCase<#=caseFieldNo #>> b) => a.IsCase<#=caseFieldNo #>;
+
+        public static bool operator !=(Choice<<#=typeParams #>> a, ChoiceCase<#=caseFieldNo #><TCase<#=caseFieldNo #>> b) => !(a == b);
+<#		}
+		foreach(var caseFieldNo in caseFieldNumbers)
+		{ #>
+
+		public static implicit operator Choice<<#=typeParams #>>(ChoiceCase<#=caseFieldNo #><TCase<#=caseFieldNo #>> @case) => Case<#=caseFieldNo #>(@case.Value);
+<#		}
+
+		foreach(var caseFieldNo in caseFieldNumbers.Skip(1).Take(caseFieldNumbers.Last()-2))
+		{
+			var paramTypeParams = string.Join(", ", Enumerable.Range(1, caseFieldNo).Select(i => $"TCase{i}"));
+			var ctorParamValues = caseFieldNumbers.Select(_ => "default").ToList();
+			ctorParamValues[caseFieldNo-1] = "value";
+			var matchCases = string.Join(", ", Enumerable.Range(2, caseFieldNo-1).Select(i => $"Case{i}"));
+#>
+
+		public static implicit operator Choice<<#=typeParams #>>(Choice<<#=paramTypeParams #>> choice) => choice.Match(Case1, <#=matchCases #>);
+<#		} #>
+	}
+<#	} #>
+}
