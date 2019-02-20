@@ -33,5 +33,9 @@
         public static SuccessResult<T> Success<T>(T value) => new SuccessResult<T>(value);
 
         public static ErrorResult<TError> Error<TError>(TError error) => new ErrorResult<TError>(error);
+
+        public static Lst<TItem> ToList<TItem>(params TItem[] items) => new Lst<TItem>(items);
+
+        public static Lst<TItem> ToList<TItem>(TItem item) => new Lst<TItem>(item);
     }
 }
