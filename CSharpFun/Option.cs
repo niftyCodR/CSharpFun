@@ -2,7 +2,7 @@
 
 namespace CSharpFun
 {
-    public struct Option<T> : IEquatable<Option<T>>
+    public struct Option<T> : IEquatable<Option<T>>, IEquatable<T>
     {
         private readonly T _value;
 
@@ -61,6 +61,11 @@ namespace CSharpFun
             return other.IsSome && Equals(_value, other._value);
         }
 
+        public bool Equals(T other)
+        {
+            return Match(val => Equals(val, other), () => false);
+        }
+
         public override bool Equals(object obj) => obj is Option<T> other && Equals(other);
 
         public override int GetHashCode() => IsNone ? 0 : 397 ^ _value.GetHashCode();
@@ -76,6 +81,14 @@ namespace CSharpFun
         public static bool operator ==(NoneOption a, Option<T> b) => b.IsNone;
 
         public static bool operator !=(NoneOption a, Option<T> b) => !(a == b);
+
+        public static bool operator ==(Option<T> a, T b) => a.Equals(b);
+
+        public static bool operator !=(Option<T> a, T b) => !(a == b);
+
+        public static bool operator ==(T a, Option<T> b) => b == a;
+
+        public static bool operator !=(T a, Option<T> b) => !(a == b);
 
         #endregion
 

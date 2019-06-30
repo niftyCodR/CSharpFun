@@ -248,5 +248,29 @@ namespace CSharpFun.Tests
 
             Assert.True(actual.IsSome);
         }
+
+        [Fact]
+        public void Equality_WithUnderlyingType_ComparesValues()
+        {
+            var option = Option<string>.Some("Test");
+
+            Assert.True(option == "Test");
+            Assert.True("Test" == option);
+
+            Assert.False(option != "Test");
+            Assert.False("Test" != option);
+
+            Assert.False(option == "Test1");
+            Assert.False("Test1" == option);
+
+            Assert.True(option != "Test1");
+            Assert.True("Test1" != option);
+
+            Assert.False(option == null);
+            Assert.True(option != null);
+
+            Assert.True(option.Equals("Test"));
+            Assert.False(option.Equals(null));
+        }
     }
 }
