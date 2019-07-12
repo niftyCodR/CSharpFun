@@ -195,6 +195,30 @@ namespace CSharpFun.Tests
 
                 Assert.Equal("Case15True", value);
             }
+
+            [Fact]
+            public void Equality_WithUnderlyingType_ComparesValues()
+            {
+                var result = Result<string, string>.Success("Test");
+
+                Assert.True(result == "Test");
+                Assert.True("Test" == result);
+
+                Assert.False(result != "Test");
+                Assert.False("Test" != result);
+
+                Assert.False(result == "Test1");
+                Assert.False("Test1" == result);
+
+                Assert.True(result != "Test1");
+                Assert.True("Test1" != result);
+
+                Assert.False(result == null);
+                Assert.True(result != null);
+
+                Assert.True(result.Equals("Test"));
+                Assert.False(result.Equals(null));
+            }
         }
     }
 }

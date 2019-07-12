@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CSharpFun
 {
-    public struct Result<T, TError> : IEquatable<Result<T, TError>>
+    public struct Result<T, TError> : IEquatable<Result<T, TError>>, IEquatable<T>
     {
         private readonly ResultState _state;
         private readonly T _value;
@@ -72,7 +72,15 @@ namespace CSharpFun
             }
         }
 
-        public override bool Equals(object obj) => obj is Result<T, TError> other && Equals(other);
+        public bool Equals(T other)
+        {
+            return Match(val => Equals(val, other), _ => false);
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Result<T, TError> other && Equals(other);
+        }
 
         public override int GetHashCode()
         {
@@ -111,6 +119,14 @@ namespace CSharpFun
         public static bool operator ==(ErrorResult<TError> a, Result<T, TError> b) => b == a;
 
         public static bool operator !=(ErrorResult<TError> a, Result<T, TError> b) => !(a == b);
+
+        public static bool operator ==(Result<T, TError> a, T b) => a.Equals(b);
+
+        public static bool operator !=(Result<T, TError> a, T b) => !(a == b);
+
+        public static bool operator ==(T a, Result<T, TError> b) => b == a;
+
+        public static bool operator !=(T a, Result<T, TError> b) => !(a == b);
 
         #endregion
 
