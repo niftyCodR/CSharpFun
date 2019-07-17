@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
     <LangVersion>7.3</LangVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <Authors>niftyCodR@github.com</Authors>
@@ -9,6 +9,10 @@
     <Description>Brings Fun(ctional) patterns to C#</Description>
     <PackageProjectUrl>https://github.com/niftyCodR/CSharpFun</PackageProjectUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" Condition="'$(TargetFrameworkVersion)' == 'v4.6.2'"  />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Choice.cs">
