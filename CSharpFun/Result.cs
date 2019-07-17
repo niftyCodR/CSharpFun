@@ -157,7 +157,11 @@ namespace CSharpFun
     {
         public static SuccessResult<T> Success<T>(T value) => new SuccessResult<T>(value);
 
+        public static SuccessResult<Unit> Success() => new SuccessResult<Unit>(Unit.Value);
+
         public static ErrorResult<TError> Error<TError>(TError error) => new ErrorResult<TError>(error);
+
+        public static ErrorResult<Unit> Error() => new ErrorResult<Unit>(Unit.Value);
 
         public static Result<T, TError> If<T, TError>(bool condition, T then, TError @else)
         {

@@ -111,6 +111,8 @@ namespace CSharpFun
         /// </exception>
         public static Option<T> Some<T>(T value) => Option<T>.Some(value);
 
+        public static Option<Unit> Some() => Some(Unit.Value);
+
         /// <summary>
         /// Creates an option which represents a value.
         /// <para>Does NOT throw an exception. If <paramref name="value"/> is null, returns <see cref="Option{T}.None"/>.</para>
@@ -190,6 +192,11 @@ namespace CSharpFun
         public static Option<T> ToOption<T>(this T? nullable) where T : struct
         {
             return nullable.HasValue ? Option<T>.Some(nullable.Value) : Option<T>.None;
+        }
+
+        public static T? ToNullable<T>(this Option<T> option) where T : struct
+        {
+            return option.Match(value => value, () => (T?)null);
         }
     }
 }    

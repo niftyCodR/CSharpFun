@@ -10,6 +10,11 @@ namespace CSharpFun
 {
     public static partial class Result
     {
+		public static TResult Match<T, TError, TResult>(this Result<T, TError> result, Func<TError, TResult> onError) where T : TResult
+        {
+            return result.Match(value => value, onError);
+        }
+
 		public static Result<T, TError> OnSuccess<T, TError>(this Result<T, TError> result, Action<T> onSuccess)
 		{
 			return result.Match(value =>
