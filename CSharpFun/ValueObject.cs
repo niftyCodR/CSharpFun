@@ -9,7 +9,7 @@ namespace CSharpFun
 {
     public abstract class ValueObject
     {
-        private static readonly IEqualityComparer<ValueObject> EqualityComparer = new MemberEqualityComparer<ValueObject>(o => o.GetEqualityMembers());
+        private static readonly MemberEqualityComparer<ValueObject> EqualityComparer = new MemberEqualityComparer<ValueObject>(o => o.GetEqualityMembers());
 
         protected virtual IEnumerable<object> GetEqualityMembers()
         {
@@ -24,6 +24,11 @@ namespace CSharpFun
         public override int GetHashCode()
         {
             return EqualityComparer.GetHashCode(this);
+        }
+
+        public override string ToString()
+        {
+            return EqualityComparer.ToString(this);
         }
 
         private static class PublicMemberUtil
@@ -80,6 +85,11 @@ namespace CSharpFun
         protected override IEnumerable<object> GetEqualityMembers()
         {
             yield return Value;
+        }
+
+        public override string ToString()
+        {
+            return Value?.ToString() ?? "";
         }
 
         public static implicit operator T(SingleValueObject<T> valueObject) => valueObject.Value;

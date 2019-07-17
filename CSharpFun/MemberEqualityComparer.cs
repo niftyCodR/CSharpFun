@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace CSharpFun
 {
@@ -30,6 +31,13 @@ namespace CSharpFun
             {
                 return _getEqualityMembers(a).Aggregate(0, (acc, val) => acc * 397 + val?.GetHashCode() ?? 0);
             }
+        }
+
+        public string ToString(T a)
+        {
+            return a == null
+                ? ""
+                : string.Join(";###;", _getEqualityMembers(a).Where(value => value != null));
         }
     }
 }
