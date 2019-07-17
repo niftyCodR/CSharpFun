@@ -8,6 +8,8 @@
     <Company>niftyCodR@github.com</Company>
     <Description>Brings Fun(ctional) patterns to C#</Description>
     <PackageProjectUrl>https://github.com/niftyCodR/CSharpFun</PackageProjectUrl>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
