@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace CSharpFun
 {
-    public abstract class ValueObject : IEquatable<ValueObject>
+    public abstract class ValueObject
     {
         private static readonly IEqualityComparer<ValueObject> EqualityComparer = new MemberEqualityComparer<ValueObject>(o => o.GetEqualityMembers());
 
@@ -16,29 +16,14 @@ namespace CSharpFun
             return PublicMemberUtil.GetPublicMembersFunc(GetType()).Invoke(this);
         }
 
-        public bool Equals(ValueObject other)
-        {
-            return EqualityComparer.Equals(this, other);
-        }
-
         public override bool Equals(object obj)
         {
-            return obj is ValueObject other && Equals(other);
+            return obj is ValueObject other && EqualityComparer.Equals(this, other);
         }
 
         public override int GetHashCode()
         {
             return EqualityComparer.GetHashCode(this);
-        }
-
-        public static bool operator ==(ValueObject a, ValueObject b)
-        {
-            return EqualityComparer.Equals(a, b);
-        }
-
-        public static bool operator !=(ValueObject a, ValueObject b)
-        {
-            return !(a == b);
         }
 
         private static class PublicMemberUtil
