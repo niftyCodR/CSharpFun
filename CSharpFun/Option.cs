@@ -198,5 +198,23 @@ namespace CSharpFun
         {
             return option.Match(value => value, () => (T?)null);
         }
+
+        public static Option<T> OnSome<T>(this Option<T> option, Action<T> onSome)
+        {
+            return option.Match(
+                value =>
+                {
+                    onSome(value);
+                    return option;
+                },
+                () => option
+            );
+        }
+
+        public static Option<Unit> Do(Action action)
+        {
+            action();
+            return Some(Unit.Value);
+        }
     }
 }    
