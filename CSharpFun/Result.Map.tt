@@ -36,13 +36,6 @@ namespace CSharpFun
 
 			return result.Match(tuple => Result<TResult, TError>.Success(selector(<#=bindParams #>)), Result<TResult, TError>.Error);
 		}
-
-		public static Result<(<#=typeParams #>), TResultError> MapError<<#=typeParams #>, TError, TResultError>(this Result<(<#=typeParams #>), TError> result, Func<TError, TResultError> selector)
-        {
-			if (selector == null) throw new ArgumentNullException(nameof(selector));
-
-			return result.Match(Result<(<#=typeParams #>), TResultError>.Success, error => Result<(<#=typeParams #>), TResultError>.Error(selector(error)));
-        }
 <#} #>
     }
 }
