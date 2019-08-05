@@ -241,5 +241,27 @@ namespace CSharpFun
         {
             return result.Match(_ => fallback, error => error);
         }
+
+        public static Result<Unit, Exception> Do(Action action)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                return Result<Unit, Exception>.Error(e);
+            }
+
+            return Result<Unit, Exception>.Success(Unit.Value);
+        }
+
+        public static Result<Unit, TError> Do<TError>(Func<Option<TError>> action)
+        {
+            return action().Match(
+                Result<Unit, TError>.Error,
+                () => Result<Unit, TError>.Success(Unit.Value)
+            );
+        }
     }
 }
