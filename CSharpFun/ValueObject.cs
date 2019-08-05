@@ -16,6 +16,8 @@ namespace CSharpFun
             return PublicMemberUtil.GetPublicMembersFunc(GetType()).Invoke(this);
         }
 
+        protected static bool SaveEquals<T>(T a, T b) => a?.Equals(b) ?? b == null;
+
         public override bool Equals(object obj)
         {
             return obj is ValueObject other && EqualityComparer.Equals(this, other);
