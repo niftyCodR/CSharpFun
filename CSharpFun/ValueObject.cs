@@ -52,7 +52,7 @@ namespace CSharpFun
             private static Func<object, IEnumerable<object>> GetEqualityMembersFunc(Type type)
             {
                 var properties = type.GetProperties()
-                    .Where(p => p.CanRead && p.DeclaringType == typeof(ValueObject))
+                    .Where(p => p.CanRead && p.DeclaringType == type)
                     .Cast<MemberInfo>();
 
                 var fields = type.GetFields()
