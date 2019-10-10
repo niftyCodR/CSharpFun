@@ -42,6 +42,14 @@ namespace CSharpFun
 
         public static Lst<T> operator +(Lst<T> a, Lst<T> b) => new Lst<T>(a.Concat(b).ToArray());
 
+        public static Lst<T> operator +(Lst<T> list, T item) => list + new Lst<T>(item);
+
+        public static Lst<T> operator +(T item, Lst<T> list) => list + item;
+
+        public static implicit operator T[](Lst<T> list) => list.ToArray();
+
+        public static implicit operator Lst<T>(T item) => new Lst<T>(item);
+
         #endregion
 
         public bool Equals(Lst<T> other)
@@ -58,8 +66,6 @@ namespace CSharpFun
         {
             return _items?.GetHashCode() ?? 0;
         }
-
-        public static implicit operator Lst<T>(T item) => new Lst<T>(item);
     }
 
     public static class Lst
