@@ -61,11 +61,11 @@ namespace CSharpFun
 
                 var memberAccessors = properties.Union(fields)
                     .Select(GetMemberAccessor)
-                    .ToList();
+                    .ToArray();
 
                 return valueObject => memberAccessors
                     .Select(getter => getter(valueObject))
-                    .ToList();
+                    .ToArray();
 
                 Func<object, object> GetMemberAccessor(MemberInfo member)
                 {

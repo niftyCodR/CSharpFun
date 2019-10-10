@@ -19,7 +19,7 @@ namespace CSharpFun
 
         public override bool Equals(object obj)
         {
-            return obj is Unit other && Equals(other);
+            return obj is Unit;
         }
 
         public override int GetHashCode()
