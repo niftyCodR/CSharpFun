@@ -6,18 +6,27 @@ using System.Linq;
 namespace CSharpFun
 {
     /// <summary>
-    /// Represents a readonly collection of items.
+    /// Represents a readonly list of items. Items cannot be null.
     /// </summary>
     public struct Lst<T> : IReadOnlyList<T>, IEquatable<Lst<T>>, IList<T>
     {
         private readonly IList<T> _items;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Lst{T}"/> type.
+        /// </summary>
+        /// <param name="items">
+        /// The collection of items in the list.
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when an item in the provided collection is null.
+        /// </exception>
         public Lst(params T[] items)
         {
-            if(items == null || items.Any(err => ReferenceEquals(null, err)))
-                throw new ArgumentNullException(nameof(items), $"{nameof(Lst<T>)} does not support null values.");
+            _items = items?.ToArray();
 
-            _items = items.ToArray();
+            if(NonEmptyItems.Any(item => item == null))
+                throw new ArgumentException("Items cannot be null.", nameof(items));
         }
 
         public bool IsEmpty => Count == 0;
@@ -119,5 +128,7 @@ namespace CSharpFun
     public static class Lst
     {
         public static Lst<T> Create<T>(T item) => new Lst<T>(item);
+
+        public static Lst<T> CreateWithoutNulls<T>(params T[] items) => new Lst<T>(items?.Where(item => item != null).ToArray());
     }
 }
