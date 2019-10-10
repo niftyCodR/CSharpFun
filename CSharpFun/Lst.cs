@@ -59,7 +59,7 @@ namespace CSharpFun
             return _items?.GetHashCode() ?? 0;
         }
 
-        public static implicit operator Lst<T>(T error) => new Lst<T>(error);
+        public static implicit operator Lst<T>(T item) => new Lst<T>(item);
     }
 
     public static class Lst
