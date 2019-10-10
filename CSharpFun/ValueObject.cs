@@ -9,8 +9,6 @@ namespace CSharpFun
 {
     public abstract class ValueObject
     {
-        private static readonly MemberEqualityComparer<ValueObject> EqualityComparer = new MemberEqualityComparer<ValueObject>(o => o.GetEqualityMembers());
-
         protected virtual IEnumerable<object> GetEqualityMembers()
         {
             return PublicMemberUtil.GetPublicMembersFunc(GetType()).Invoke(this);
@@ -20,17 +18,26 @@ namespace CSharpFun
 
         public override bool Equals(object obj)
         {
-            return obj is ValueObject other && EqualityComparer.Equals(this, other);
+            if (obj == null || GetType() != obj.GetType() || !(obj is ValueObject other))
+                return false;
+
+            var members = GetEqualityMembers();
+            var otherMembers =  other.GetEqualityMembers();
+
+            return members.SequenceEqual(otherMembers);
         }
 
         public override int GetHashCode()
         {
-            return EqualityComparer.GetHashCode(this);
+            unchecked
+            {
+                return GetEqualityMembers().Aggregate(0, (acc, val) => acc * 397 + val?.GetHashCode() ?? 0);
+            }
         }
 
         public override string ToString()
         {
-            return EqualityComparer.ToString(this);
+            return string.Join(";###;", GetEqualityMembers().Where(value => value != null));
         }
 
         private static class PublicMemberUtil
