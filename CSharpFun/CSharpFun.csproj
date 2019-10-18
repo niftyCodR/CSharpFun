@@ -8,12 +8,12 @@
     <Company>niftyCodR@github.com</Company>
     <Description>Brings Fun(ctional) patterns to C#</Description>
     <PackageProjectUrl>https://github.com/niftyCodR/CSharpFun</PackageProjectUrl>
-    <Version>1.2.0</Version>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <Version>1.3.0</Version>
+    <AssemblyVersion>1.3.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" Condition="'$(TargetFrameworkVersion)' == 'v4.6.2'"  />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" Condition="'$(TargetFrameworkVersion)' == 'v4.6.2'" />
   </ItemGroup>
 
   <ItemGroup>
