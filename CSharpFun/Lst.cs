@@ -8,10 +8,10 @@ namespace CSharpFun
     /// <summary>
     /// Represents a readonly collection of items.
     /// </summary>
-    public struct Lst<T> : IReadOnlyList<T>, IEquatable<Lst<T>>
+    public struct Lst<T> : IReadOnlyList<T>, IEquatable<Lst<T>>, IList<T>
     {
-        private readonly IReadOnlyList<T> _items;
-        
+        private readonly IList<T> _items;
+
         public Lst(params T[] items)
         {
             if(items == null || items.Any(err => ReferenceEquals(null, err)))
@@ -22,7 +22,7 @@ namespace CSharpFun
 
         public bool IsEmpty => Count == 0;
 
-        private IReadOnlyList<T> NonEmptyItems => _items ?? Array.Empty<T>();
+        private IList<T> NonEmptyItems => _items ?? Array.Empty<T>();
 
         public IEnumerator<T> GetEnumerator()
         {
@@ -37,6 +37,54 @@ namespace CSharpFun
         public int Count => NonEmptyItems.Count;
 
         public T this[int index] => NonEmptyItems[index];
+
+        void ICollection<T>.Add(T item)
+        {
+            throw new NotSupportedException("This is an immutable collection, no changes allowed.");
+        }
+
+        void ICollection<T>.Clear()
+        {
+            throw new NotSupportedException("This is an immutable collection, no changes allowed.");
+        }
+
+        bool ICollection<T>.Contains(T item)
+        {
+            return NonEmptyItems.Contains(item);
+        }
+
+        void ICollection<T>.CopyTo(T[] array, int arrayIndex)
+        {
+            NonEmptyItems.CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<T>.Remove(T item)
+        {
+            throw new NotSupportedException("This is an immutable collection, no changes allowed.");
+        }
+
+        bool ICollection<T>.IsReadOnly => true;
+
+        int IList<T>.IndexOf(T item)
+        {
+            return NonEmptyItems.IndexOf(item);
+        }
+
+        void IList<T>.Insert(int index, T item)
+        {
+            throw new NotSupportedException("This is an immutable collection, no changes allowed.");
+        }
+
+        void IList<T>.RemoveAt(int index)
+        {
+            throw new NotSupportedException("This is an immutable collection, no changes allowed.");
+        }
+
+        T IList<T>.this[int index]
+        {
+            get => this[index];
+            set => throw new NotSupportedException("This is an immutable collection, no changes allowed.");
+        }
 
         #region Operators
 
