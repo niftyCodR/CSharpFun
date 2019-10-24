@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace CSharpFun
 {
@@ -99,6 +100,7 @@ namespace CSharpFun
 		public bool IsCase1 => Case == ChoiceCase.Case1;
 		public bool IsCase2 => Case == ChoiceCase.Case2;
 		
+        [Pure]
         public TResult Match<TResult>(Func<TCase1, TResult> case1, Func<TCase2, TResult> case2)
         {
             switch (Case)
@@ -170,7 +172,8 @@ namespace CSharpFun
 		public bool IsCase1 => Case == ChoiceCase.Case1;
 		public bool IsCase2 => Case == ChoiceCase.Case2;
 		public bool IsCase3 => Case == ChoiceCase.Case3;
-		
+
+        [Pure]
         public TResult Match<TResult>(Func<TCase1, TResult> case1, Func<TCase2, TResult> case2, Func<TCase3, TResult> case3)
         {
             switch (Case)
@@ -257,7 +260,8 @@ namespace CSharpFun
 		public bool IsCase2 => Case == ChoiceCase.Case2;
 		public bool IsCase3 => Case == ChoiceCase.Case3;
 		public bool IsCase4 => Case == ChoiceCase.Case4;
-		
+
+        [Pure]
         public TResult Match<TResult>(Func<TCase1, TResult> case1, Func<TCase2, TResult> case2, Func<TCase3, TResult> case3, Func<TCase4, TResult> case4)
         {
             switch (Case)
@@ -359,7 +363,8 @@ namespace CSharpFun
 		public bool IsCase3 => Case == ChoiceCase.Case3;
 		public bool IsCase4 => Case == ChoiceCase.Case4;
 		public bool IsCase5 => Case == ChoiceCase.Case5;
-		
+
+        [Pure]
         public TResult Match<TResult>(Func<TCase1, TResult> case1, Func<TCase2, TResult> case2, Func<TCase3, TResult> case3, Func<TCase4, TResult> case4, Func<TCase5, TResult> case5)
         {
             switch (Case)

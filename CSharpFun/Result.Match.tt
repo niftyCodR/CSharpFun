@@ -5,6 +5,7 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".cs" #>
 using System;
+using System.Diagnostics.Contracts;
 
 namespace CSharpFun
 {
@@ -39,6 +40,7 @@ namespace CSharpFun
 	var bindParams = string.Join(", ", range.Select(i => $"tuple.Item{i}"));
 #>
 
+		[Pure]
 		public static TResult Match<<#=typeParams #>, TError, TResult>(this Result<(<#=typeParams #>), TError> result, Func<<#=typeParams #>, TResult> onSuccess, Func<TError, TResult> onError)
 		{
 			return result.Match(tuple => onSuccess(<#=bindParams #>), onError);

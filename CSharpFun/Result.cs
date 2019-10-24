@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 
 namespace CSharpFun
 {
@@ -37,6 +38,7 @@ namespace CSharpFun
 
         public bool IsError => _state == ResultState.Error;
 
+        [Pure]
         public TResult Match<TResult>(Func<T, TResult> onSuccess, Func<TError, TResult> onError)
         {
             if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Contracts;
 
 namespace CSharpFun
 {
@@ -43,6 +44,7 @@ namespace CSharpFun
 
         public bool IsNone => !IsSome;
 
+        [Pure]
         public TResult Match<TResult>(Func<T, TResult> onSome, Func<TResult> onNone)
         {
             if (onSome == null) throw new ArgumentNullException(nameof(onSome));
