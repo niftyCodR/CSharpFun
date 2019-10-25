@@ -6,6 +6,7 @@
 <#@ output extension=".cs" #>
 using System;
 using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 
 namespace CSharpFun
 {
@@ -20,8 +21,35 @@ namespace CSharpFun
 		[Pure]
 		public static TResult Match<<#=typeParams #>, TResult>(this Option<(<#=typeParams #>)> option, Func<<#=typeParams #>, TResult> onSome, Func<TResult> onNone)
 		{
+            if (onSome == null) throw new ArgumentNullException(nameof(onSome));
+            if (onNone == null) throw new ArgumentNullException(nameof(onNone));
+
 			return option.Match(tuple => onSome(<#=bindParams #>), onNone);
 		}
+
+		[Pure]
+		public static async Task<TResult> Match<<#=typeParams #>, TResult>(this Task<Option<(<#=typeParams #>)>> asyncOption, Func<<#=typeParams #>, TResult> onSome, Func<TResult> onNone)
+		{
+			if (asyncOption == null) throw new ArgumentNullException(nameof(asyncOption));
+            if (onSome == null) throw new ArgumentNullException(nameof(onSome));
+            if (onNone == null) throw new ArgumentNullException(nameof(onNone));
+
+			var option = await asyncOption;
+
+			return option.Match(onSome, onNone);
+		}
+
+		public static Option<(<#=typeParams #>)> OnSome<<#=typeParams #>>(this Option<(<#=typeParams #>)> option, Action<<#=typeParams #>> onSome)
+        {
+            return option.Match(
+                tuple =>
+                {
+                    onSome(<#=bindParams #>);
+                    return option;
+                },
+                () => option
+            );
+        }
 <#} #>
     }
 }

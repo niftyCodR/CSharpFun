@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 
 namespace CSharpFun
 {
@@ -242,6 +243,66 @@ namespace CSharpFun
         public static TError GetErrorOr<T, TError>(this Result<T, TError> result, TError fallback)
         {
             return result.Match(_ => fallback, error => error);
+        }
+
+        [Pure]
+        public static TResult Match<T, TError, TResult>(this Result<T, TError> result, Func<TError, TResult> onError) where T : TResult
+        {
+            return result.Match(value => value, onError);
+        }
+
+        [Pure]
+        public static async Task<TResult> Match<T, TError, TResult>(this Task<Result<T, TError>> asyncResult, Func<T, TResult> onSuccess, Func<TError, TResult> onError)
+        {
+            if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
+            if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
+            if (onError == null) throw new ArgumentNullException(nameof(onError));
+
+            var result = await asyncResult;
+
+            return result.Match(onSuccess, onError);
+        }
+
+        public static Result<T, TError> OnSuccess<T, TError>(this Result<T, TError> result, Action<T> onSuccess)
+        {
+            if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
+
+            return result.Match(value =>
+            {
+                onSuccess(value);
+                return result;
+            }, _ => result);
+        }
+
+        public static async Task<Result<T, TError>> OnSuccess<T, TError>(this Task<Result<T, TError>> asyncResult, Action<T> onSuccess)
+        {
+            if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
+            if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
+
+            var result = await asyncResult;
+
+            return result.OnSuccess(onSuccess);
+        }
+
+        public static Result<T, TError> OnError<T, TError>(this Result<T, TError> result, Action<TError> onError)
+        {
+            if (onError == null) throw new ArgumentNullException(nameof(onError));
+
+            return result.Match(_ => result, error =>
+            {
+                onError(error);
+                return result;
+            });
+        }
+
+        public static async Task<Result<T, TError>> OnError<T, TError>(this Task<Result<T, TError>> asyncResult, Action<TError> onError)
+        {
+            if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
+            if (onError == null) throw new ArgumentNullException(nameof(onError));
+
+            var result = await asyncResult;
+
+            return result.OnError(onError);
         }
 
         public static Result<Unit, Exception> Do(Action action)

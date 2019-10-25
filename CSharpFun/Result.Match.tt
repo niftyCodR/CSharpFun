@@ -6,34 +6,12 @@
 <#@ output extension=".cs" #>
 using System;
 using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 
 namespace CSharpFun
 {
     public static partial class Result
-    {
-		public static TResult Match<T, TError, TResult>(this Result<T, TError> result, Func<TError, TResult> onError) where T : TResult
-        {
-            return result.Match(value => value, onError);
-        }
-
-		public static Result<T, TError> OnSuccess<T, TError>(this Result<T, TError> result, Action<T> onSuccess)
-		{
-			return result.Match(value =>
-		    {
-		        onSuccess(value);
-		        return result;
-		    }, _ => result);
-		}
-
-		public static Result<T, TError> OnError<T, TError>(this Result<T, TError> result, Action<TError> onError)
-		{
-			return result.Match(_ => result, error =>
-		    {
-		        onError(error);
-		        return result;
-		    });
-		}
-<#	for(var typeParamCount=2;typeParamCount<=16;typeParamCount++)
+    {<#	for(var typeParamCount=2;typeParamCount<=16;typeParamCount++)
 {
 	var range = Enumerable.Range(1, typeParamCount);
 	var typeParams = string.Join(", ", range.Select(i => $"T{i}"));
@@ -46,6 +24,18 @@ namespace CSharpFun
 			return result.Match(tuple => onSuccess(<#=bindParams #>), onError);
 		}
 
+		[Pure]
+		public static async Task<TResult> Match<<#=typeParams #>, TError, TResult>(this Task<Result<(<#=typeParams #>), TError>> asyncResult, Func<<#=typeParams #>, TResult> onSuccess, Func<TError, TResult> onError)
+        {
+            if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
+            if (onSuccess == null) throw new ArgumentNullException(nameof(onSuccess));
+            if (onError == null) throw new ArgumentNullException(nameof(onError));
+
+            var result = await asyncResult;
+
+            return result.Match(tuple => onSuccess(<#=bindParams #>), onError);
+        }
+
 		public static Result<(<#=typeParams #>), TError> OnSuccess<<#=typeParams #>, TError>(this Result<(<#=typeParams #>), TError> result, Action<<#=typeParams #>> onSuccess)
 		{
 			return result.Match(tuple =>
@@ -53,15 +43,6 @@ namespace CSharpFun
 		        onSuccess(<#=bindParams #>);
 		        return result;
 		    }, _ => result);
-		}
-
-		public static Result<(<#=typeParams #>), TError> OnError<<#=typeParams #>, TError>(this Result<(<#=typeParams #>), TError> result, Action<TError> onError)
-		{
-			return result.Match(_ => result, error =>
-		    {
-		        onError(error);
-		        return result;
-		    });
 		}
 <#} #>
     }

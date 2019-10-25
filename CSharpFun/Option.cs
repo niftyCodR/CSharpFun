@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
+using System.Threading.Tasks;
 
 namespace CSharpFun
 {
@@ -201,8 +202,22 @@ namespace CSharpFun
             return option.Match(value => value, () => (T?)null);
         }
 
+        [Pure]
+        public static async Task<TResult> Match<T, TResult>(this Task<Option<T>> asyncOption, Func<T, TResult> onSome, Func<TResult> onNone)
+        {
+            if (asyncOption == null) throw new ArgumentNullException(nameof(asyncOption));
+            if (onSome == null) throw new ArgumentNullException(nameof(onSome));
+            if (onNone == null) throw new ArgumentNullException(nameof(onNone));
+
+            var option = await asyncOption;
+
+            return option.Match(onSome, onNone);
+        }
+
         public static Option<T> OnSome<T>(this Option<T> option, Action<T> onSome)
         {
+            if (onSome == null) throw new ArgumentNullException(nameof(onSome));
+
             return option.Match(
                 value =>
                 {
@@ -213,8 +228,44 @@ namespace CSharpFun
             );
         }
 
+        public static async Task<Option<T>> OnSome<T>(this Task<Option<T>> asyncOption, Action<T> onSome)
+        {
+            if (asyncOption == null) throw new ArgumentNullException(nameof(asyncOption));
+            if (onSome == null) throw new ArgumentNullException(nameof(onSome));
+
+            var option = await asyncOption;
+
+            return option.OnSome(onSome);
+        }
+
+        public static async Task<Option<T>> OnNone<T>(this Task<Option<T>> asyncOption, Action onNone)
+        {
+            if (asyncOption == null) throw new ArgumentNullException(nameof(asyncOption));
+            if (onNone == null) throw new ArgumentNullException(nameof(onNone));
+
+            var option = await asyncOption;
+
+            return option.OnNone(onNone);
+        }
+
+        public static Option<T> OnNone<T>(this Option<T> option, Action onNone)
+        {
+            if (onNone == null) throw new ArgumentNullException(nameof(onNone));
+
+            return option.Match(
+                _ => option,
+                () =>
+                {
+                    onNone();
+                    return option;
+                }
+            );
+        }
+
         public static Option<Unit> Do(Action action)
         {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+
             action();
             return Some(Unit.Value);
         }
