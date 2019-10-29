@@ -7,6 +7,15 @@ namespace CSharpFun.Linq.Async
     {
         public static async Task<Result<T, TError>> ToAsync<T, TError>(this Result<T, TError> result) => await Task.FromResult(result);
 
+        public static async Task<Result<TResult, TError>> Select<T, TError, TResult>(this Task<Result<T, TError>> asyncResult, Func<T, TResult> selector)
+        {
+            if (asyncResult == null) throw new ArgumentNullException(nameof(asyncResult));
+            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            var result = await asyncResult;
+
+            return result.Map(selector);
+        }
+
         public static async Task<Result<TResult, TError>> SelectMany<T, TIntermediate, TResult, TError>(this Task<Result<T, TError>> asyncResult, Func<T, Task<Result<TIntermediate, TError>>> bind, Func<T, TIntermediate, TResult> selector)
         {
             if (bind == null) throw new ArgumentNullException(nameof(bind));

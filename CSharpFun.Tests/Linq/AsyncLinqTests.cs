@@ -39,6 +39,7 @@ namespace CSharpFun.Tests.Linq
         {
             var result = await (
                 from res1 in AsyncSuccessResult(true)
+                let b = res1
                 from res2 in AsyncErrorResult(3)
                 from res3 in SuccessResult(true).ToAsync()
                 from res4 in ErrorResult(5).ToAsync()
